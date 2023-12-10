@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "sendMess",
+    "slug": "sendMess",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "sendMess"
+}
