@@ -1,5 +1,5 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   SafeAreaView,
@@ -10,14 +10,17 @@ import {
 } from "react-native";
 import Header from "../components/Header";
 import Stories from "../components/home/Stories";
+import Posts from "../components/home/Posts";
 
 const Home = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 ">
       <StatusBar style="auto" />
       <Header navigation={navigation} />
-      <ScrollView className="px-4 mt-4">
+      <ScrollView>
         <Stories />
+
+        <Posts />
       </ScrollView>
     </SafeAreaView>
   );

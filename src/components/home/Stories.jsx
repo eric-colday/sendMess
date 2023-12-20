@@ -21,9 +21,14 @@ const Stories = () => {
   }, []);
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <TouchableOpacity className="w-[120px] h-[200px] mr-2 border border-gray-300 rounded-lg bg-slate-200"
-      onPress={() => navigation.navigate("CreateStory")}
+    <ScrollView
+      className="px-4 mt-4"
+      horizontal
+      showsHorizontalScrollIndicator={false}
+    >
+      <TouchableOpacity
+        className="w-[120px] h-[200px] mr-2 border border-gray-300 rounded-lg bg-slate-200"
+        onPress={() => navigation.navigate("CreateStory")}
       >
         <Image
           source={{
