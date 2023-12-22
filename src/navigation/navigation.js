@@ -6,8 +6,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "./AuthContext";
 import Register from "../screens/Register";
 import { HomeScreen } from "./HomeScreen";
-
-
+import Post from "../screens/postDetails/Post";
+import CreateStory from "../screens/home/CreateStory";
+import Profil from "../screens/profil/Profil";
 
 const RootNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -31,47 +32,56 @@ const RootNavigation = () => {
   if (isFirstLaunch === null) {
     return null;
   } else if (isFirstLaunch == true) {
-    routeName = "Onboarding";
+    routeName = "OnboardingScreen";
   } else {
     routeName = "Login";
   }
 
   return (
-    <Stack.Navigator initialRouteName={routeName}>
-      {/* <Stack.Screen
-        name="OnboardingScreen"
-        component={OnboardingScreen}
-        options={{ headerShown: false }}
-      /> */}
+    <>
       {user ? (
-        <Stack.Screen
-          options={{ headerShown: false }}
-          name="HomeScreen"
-          component={HomeScreen}
-        />
+        <Stack.Navigator initialRouteName={routeName}>
+          <Stack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Post"
+            component={Post}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Profil"
+            component={Profil}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="CreateStory"
+            component={CreateStory}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
       ) : (
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
+        <Stack.Navigator initialRouteName={routeName}>
+          <Stack.Screen
+            name="OnboardingScreen"
+            component={OnboardingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="Register"
+            component={Register}
+          />
+        </Stack.Navigator>
       )}
-      <Stack.Screen
-          options={{ headerShown: false }}
-          name="Register"
-          component={Register}
-        />
-      {/* <Stack.Screen
-        options={{ headerShown: false }}
-        name="HomeScreen"
-        component={HomeScreen}
-      />
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{ headerShown: false }}
-      /> */}
-    </Stack.Navigator>
+    </>
   );
 };
 

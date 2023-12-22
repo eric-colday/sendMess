@@ -1,11 +1,15 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import Likes from "./Likes";
+import { useNavigation } from "@react-navigation/native";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
+  const [likes, setLikes] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getPosts = async () => {
@@ -38,7 +42,18 @@ const Posts = () => {
     getUsers();
   }, []);
 
-  const HandleLike = async (postId, userId, isLiked) => {};
+  useEffect(() => {
+    const getLikes = async () => {
+      try {
+        const res = await axios.get("http://localhost:8800/api/likes");
+        setLikes(res.data);
+        // console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getLikes();
+  }, []);
 
   function timeSince(date) {
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -69,13 +84,13 @@ const Posts = () => {
 
   return (
     <View className="mt-4 border-y border-gray-200 ">
-      {posts.map((item) => {
+      {posts.map((post) => {
         // Trouver l'utilisateur qui a posté
-        const postUser = users.find((user) => user.id === item.userId);
+        const postUser = users.find((user) => user.id === post.userId);
 
         return (
           <View
-            key={item.id}
+            key={post.id}
             className="bg-white rounded-lg shadow-lg border border-gray-300"
           >
             <View className="p-1 bg-gray-300"></View>
@@ -98,19 +113,18 @@ const Posts = () => {
                         {postUser.name}
                       </Text>
                     )}
-                    <Text>{timeSince(new Date(item.createdAt))}</Text>
+                    <Text>{timeSince(new Date(post.createdAt))}</Text>
                   </View>
+                  {/* À supprimer */}
+                  <Text>{post.id}</Text>
                 </View>
-                <TouchableOpacity>
-                  <FontAwesome5 name="trash" color="#E5484D" size={20} />
-                </TouchableOpacity>
               </View>
-              <Text className="mt-3">{item.desc}</Text>
+              <Text className="mt-3">{post.desc}</Text>
             </View>
-            {item.img && (
+            {post.img && (
               <Image
                 source={{
-                  uri: item.img,
+                  uri: post.img,
                 }}
                 className="w-full h-[300px]"
               />
@@ -118,7 +132,9 @@ const Posts = () => {
             <View className="flex-row justify-between p-4">
               <View className="flex-row items-center gap-2">
                 <FontAwesome5 name="thumbs-up" color="#0588F0" size={20} />
-                <Text>12</Text>
+                <Text>
+                  {likes?.filter((like) => like.postId === post.id).length}
+                </Text>
               </View>
               <View className="flex-row items-center gap-2">
                 <FontAwesome5 name="comment" color="#0588F0" size={20} />
@@ -126,13 +142,13 @@ const Posts = () => {
               </View>
             </View>
             <View className="flex-row justify-around p-4 border-t border-gray-200">
-              <TouchableOpacity onPress={() => HandleLike()}>
-                <View className="flex-row items-center gap-2">
-                  <FontAwesome5 name="thumbs-up" color="#0588F0" size={20} />
-                  <Text>J'aime</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity>
+              <Likes
+                post={post}
+                likeId={likes?.find((like) => like.postId === post.id)?.id}
+              />
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Post", {post, postUser})}
+              >
                 <View className="flex-row items-center gap-2">
                   <FontAwesome5 name="comment" color="#0588F0" size={20} />
                   <Text>Commenter</Text>

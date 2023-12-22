@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 import React, { createContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
@@ -7,34 +8,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
-  // const login = (username, password) => {
-  //   setLoading(true);
-  //   axios
-  //     .post("http://localhost:8800/api/auth/login", {
-  //       username,
-  //       password,
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       setUser(res.data);
-  //       AsyncStorage.setItem("user", JSON.stringify(res.data));
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   setLoading(false);
-  // };
-
-  const login = (user) => {
-    try {
-      setLoading(true);
-      setUser(user);
-      AsyncStorage.setItem("user", JSON.stringify(user));
-      setLoading(false);
-    } catch (error) {
-      console.log(`problème 2${error}`);
-    }
+  const login = (username, password) => {
+    setLoading(true);
+    axios
+      .post("http://localhost:8800/api/auth/login", {
+        username,
+        password,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setUser(res.data);
+        AsyncStorage.setItem("user", JSON.stringify(res.data));
+      })
+      console.log("user from AsyncStorage:", user)
+      .catch((err) => {
+        console.log(err);
+      });
+    setLoading(false);
   };
+
 
   const logout = () => {
     setLoading(true);
@@ -47,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       let user = await AsyncStorage.getItem("user");
-      console.log("user from AsyncStorage:", user);
+      // console.log("user from AsyncStorage:", user);
       user = JSON.parse(user);
 
       if (user) {

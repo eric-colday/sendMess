@@ -48,7 +48,6 @@ const Register = () => {
         </Text>
         <Text className="text-center">{err}</Text>
         <TextInput
-          textContentType="text"
           placeholder="username"
           id="username"
           value={username}

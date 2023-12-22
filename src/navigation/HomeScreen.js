@@ -2,7 +2,14 @@ import { HomeScreenTab } from "./HomeScreenTab";
 import CreateStory from "../screens/home/CreateStory";
 import { AuthContext } from "./AuthContext";
 import { useContext } from "react";
-import { Button, Image, Text, View, SafeAreaView } from "react-native";
+import {
+  Button,
+  Image,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import {
   createDrawerNavigator,
@@ -31,7 +38,7 @@ function CustomDrawerContent(props) {
         </Text>
         <Text
           className="mt-2 text-xl"
-          onPress={() => props.navigation.navigate("Publier")}
+          onPress={() => props.navigation.navigate("Profil", { user })}
         >
           Voir le profil
         </Text>
@@ -41,23 +48,16 @@ function CustomDrawerContent(props) {
           <DrawerItemList {...props} />
         </DrawerContentScrollView>
       </View>
-      <View className="flex-1 flex-row gap-4 pl-6">
-        <FontAwesome5
-          name="sign-out-alt"
-          color="#838383"
-          size={20}
-          onPress={() => props.navigation.navigate("Publier")}
-        />
-        <Text
-          className="text-gray-500"
-          onPress={() => {
-            logout();
-            props.navigation.navigate("Login");
-          }}
-        >
-          Déconnexion
-        </Text>
-      </View>
+      <TouchableOpacity
+        className="flex-1 flex-row gap-4 pl-6"
+        onPress={() => {
+          logout();
+          props.navigation.navigate("HomeScreen");
+        }}
+      >
+        <FontAwesome5 name="sign-out-alt" color="#838383" size={20} />
+        <Text className="text-gray-500">Déconnexion</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -74,7 +74,6 @@ export function HomeScreen() {
       screenOptions={screenOptions}
     >
       <Drawer.Screen name="Accueil" component={HomeScreenTab} />
-      <Drawer.Screen name="CreateStory" component={CreateStory} />
     </Drawer.Navigator>
   );
 }

@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { AuthContext } from "../navigation/AuthContext";
 import axios from "axios";
+import LottieView from "lottie-react-native";
 
 const Login = ({ navigation }) => {
   const [username, setUsername] = useState(null);
@@ -19,15 +20,29 @@ const Login = ({ navigation }) => {
 
   const { login } = useContext(AuthContext);
 
+  // const HandleLogin = async () => {
+  //   try {
+  //     if (username !== null && password !== null) {
+  //       const res = await axios.post("http://localhost:8800/api/auth/login", {
+  //         username,
+  //         password,
+  //       });
+  //       login(res.data);
+  //       // console.log(res.data);
+  //       navigation.navigate("HomeScreen");
+  //     } else {
+  //       setErr("Veuillez remplir tous les champs");
+  //     }
+  //   } catch (err) {
+  //     console.log(err, "erreur");
+  //     setErr("username ou password incorrect");
+  //   }
+  // };
+
   const HandleLogin = async () => {
     try {
       if (username !== null && password !== null) {
-        const res = await axios.post("http://localhost:8800/api/auth/login", {
-          username,
-          password,
-        });
-        login(res.data);
-        // console.log(res.data);
+        login(username, password);
         navigation.navigate("HomeScreen");
       } else {
         setErr("Veuillez remplir tous les champs");
@@ -41,9 +56,9 @@ const Login = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 justify-center items-center bg-[#00989e]">
       <View className="flex-1 justify-center items-center gap-5 ">
-        <Image
-          source={require("../../assets/onboarding-img1.png")}
-          style={{ width: 200, height: 200 }}
+        <LottieView
+          source={require("../../assets/animation_lo8bey8e.json")}
+          autoPlay loop
         />
         <Text className="font-bold text-center text-[40px] text-white ">
           Login

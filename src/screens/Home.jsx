@@ -19,7 +19,6 @@ const Home = ({ navigation }) => {
       <Header navigation={navigation} />
       <ScrollView>
         <Stories />
-
         <Posts />
       </ScrollView>
     </SafeAreaView>

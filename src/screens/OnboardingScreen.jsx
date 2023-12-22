@@ -55,8 +55,8 @@ const OnboardingScreen = () => {
         NextButtonComponent={Next}
         DoneButtonComponent={Done}
         DotComponent={Dots}
-        onSkip={() => navigation.navigate("HomeScreen")}
-        onDone={() => navigation.navigate("HomeScreen")}
+        onSkip={() => navigation.navigate("Login")}
+        onDone={() => navigation.navigate("Login")}
         pages={[
           {
             backgroundColor: '#a6e4d0',
