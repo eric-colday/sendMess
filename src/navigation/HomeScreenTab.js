@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import Invitations from "../screens/Invitations";
-import Publier from "../screens/Publier";
+import Publier from "../screens/publier/Publier";
 import Messages from "../screens/Messages";
 import Notifications from "../screens/Notifications";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";

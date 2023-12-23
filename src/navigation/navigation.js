@@ -9,6 +9,7 @@ import { HomeScreen } from "./HomeScreen";
 import Post from "../screens/postDetails/Post";
 import CreateStory from "../screens/home/CreateStory";
 import Profil from "../screens/profil/Profil";
+import Publier from "../screens/publier/Publier";
 
 const RootNavigation = () => {
   const Stack = createNativeStackNavigator();
@@ -54,6 +55,11 @@ const RootNavigation = () => {
           <Stack.Screen
             name="Profil"
             component={Profil}
+            options={{ headerShown: false }}
+          />
+           <Stack.Screen
+            name="Publier"
+            component={Publier}
             options={{ headerShown: false }}
           />
           <Stack.Screen

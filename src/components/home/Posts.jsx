@@ -1,35 +1,37 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Likes from "./Likes";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../navigation/AuthContext";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [likes, setLikes] = useState([]);
+  const { user } = useContext(AuthContext);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const getPosts = async () => {
-      try {
-        const res = await axios.get("http://localhost:8800/api/posts");
-        const sortedPosts = res.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-        setPosts(sortedPosts);
-
-        // Obtenez les likes
-        const likesRes = await axios.get("http://localhost:8800/api/likes");
-        setLikes(likesRes.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getPosts();
   }, []);
 
+  const getPosts = async () => {
+    try {
+      const res = await axios.get("http://localhost:8800/api/posts");
+      const sortedPosts = res.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setPosts(sortedPosts);
+
+      // Obtenez les likes
+      const likesRes = await axios.get("http://localhost:8800/api/likes");
+      setLikes(likesRes.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     const getUsers = async () => {
       try {
@@ -41,6 +43,17 @@ const Posts = () => {
     };
     getUsers();
   }, []);
+
+  const HandleDelete = async (post) => {
+    try {
+      await axios.delete(`http://localhost:8800/api/posts/${post.id}`);
+      // À SUPPRIMER
+      getPosts();
+      navigation.navigate("HomeScreen");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const getLikes = async () => {
@@ -109,25 +122,53 @@ const Posts = () => {
                   )}
                   <View>
                     {postUser && (
-                      <Text className="font-bold capitalize ">
-                        {postUser.name}
-                      </Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("Profil", {
+                            user: postUser,
+                            postUser,
+                          })
+                        }
+                      >
+                        <Text className="font-bold capitalize ">
+                          {postUser.name}
+                        </Text>
+                      </TouchableOpacity>
                     )}
                     <Text>{timeSince(new Date(post.createdAt))}</Text>
                   </View>
-                  {/* À supprimer */}
-                  <Text>{post.id}</Text>
                 </View>
+                {post.userId === user.id ? (
+                  <TouchableOpacity onPress={() => HandleDelete(post)}>
+                    <FontAwesome5 name="times" size={20} />
+                  </TouchableOpacity>
+                ) : (
+                  <Text></Text>
+                )}
               </View>
-              <Text className="mt-3">{post.desc}</Text>
+              {postUser && (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Post", { post, postUser, getPosts })
+                  }
+                >
+                  <Text className="mt-3">{post.desc}</Text>
+                </TouchableOpacity>
+              )}
             </View>
             {post.img && (
-              <Image
-                source={{
-                  uri: post.img,
-                }}
-                className="w-full h-[300px]"
-              />
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("Post", { post, postUser, getPosts })
+                }
+              >
+                <Image
+                  source={{
+                    uri: post.img,
+                  }}
+                  className="w-full h-[300px]"
+                />
+              </TouchableOpacity>
             )}
             <View className="flex-row justify-between p-4">
               <View className="flex-row items-center gap-2">
@@ -147,7 +188,10 @@ const Posts = () => {
                 likeId={likes?.find((like) => like.postId === post.id)?.id}
               />
               <TouchableOpacity
-                onPress={() => navigation.navigate("Post", {post, postUser})}
+                // À SUPPRIMER GETPOSTS
+                onPress={() =>
+                  navigation.navigate("Post", { post, postUser, getPosts })
+                }
               >
                 <View className="flex-row items-center gap-2">
                   <FontAwesome5 name="comment" color="#0588F0" size={20} />

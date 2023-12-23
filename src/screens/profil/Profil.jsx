@@ -102,6 +102,7 @@ const Profil = ({ navigation, route }) => {
 
   return (
     <SafeAreaView>
+    {/* Header */}
       <View className="flex-row justify-between items-center px-8 py-4 border-b border-gray-200">
         <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
           <FontAwesome5 name="chevron-left" size={20} />
@@ -114,6 +115,8 @@ const Profil = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <ScrollView>
+      {/* Infos Profil */}
+      <View>
         <Image
           source={{
             uri: user.coverPic || "https://picsum.photos/200/300",
@@ -144,6 +147,8 @@ const Profil = ({ navigation, route }) => {
           <Text className="text-gray-800">Ville : {user.city}</Text>
           <Text className="text-gray-800">Bio : {user.bio}</Text>
         </View>
+      </View>
+        {/* POSTS */}
         <View>
           {posts.map((post) => {
             const postUser = user;
