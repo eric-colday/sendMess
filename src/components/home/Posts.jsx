@@ -56,17 +56,20 @@ const Posts = () => {
   };
 
   useEffect(() => {
-    const getLikes = async () => {
-      try {
-        const res = await axios.get("http://localhost:8800/api/likes");
-        setLikes(res.data);
-        // console.log(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getLikes();
   }, []);
+
+  const getLikes = async () => {
+    try {
+      const res = await axios.get("http://localhost:8800/api/likes");
+      setLikes(res.data);
+      // console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+    getLikes();
+  };
+
 
   function timeSince(date) {
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -186,6 +189,7 @@ const Posts = () => {
               <Likes
                 post={post}
                 likeId={likes?.find((like) => like.postId === post.id)?.id}
+                getLikes={getLikes}
               />
               <TouchableOpacity
                 // À SUPPRIMER GETPOSTS
