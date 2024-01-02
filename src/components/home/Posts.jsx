@@ -5,42 +5,38 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Likes from "./Likes";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../navigation/AuthContext";
+import { postsStore, usersStore } from "../../../store";
+import * as Updates from 'expo-updates';
 
 const Posts = () => {
-  const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
   const [likes, setLikes] = useState([]);
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
+
+  const { posts, getPosts } = postsStore((state) => state);
+  const { users, getUsers } = usersStore((state) => state);
 
   useEffect(() => {
     getPosts();
   }, []);
 
-  const getPosts = async () => {
-    try {
-      const res = await axios.get("http://localhost:8800/api/posts");
-      const sortedPosts = res.data.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-      setPosts(sortedPosts);
+  // const getPosts = async () => {
+  //   try {
+  //     const res = await axios.get("http://localhost:8800/api/posts");
+  //     const sortedPosts = res.data.sort(
+  //       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  //     );
+  //     setPosts(sortedPosts);
 
-      // Obtenez les likes
-      const likesRes = await axios.get("http://localhost:8800/api/likes");
-      setLikes(likesRes.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     // Obtenez les likes
+  //     const likesRes = await axios.get("http://localhost:8800/api/likes");
+  //     setLikes(likesRes.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const res = await axios.get("http://localhost:8800/api/users");
-        setUsers(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getUsers();
   }, []);
 
@@ -48,8 +44,9 @@ const Posts = () => {
     try {
       await axios.delete(`http://localhost:8800/api/posts/${post.id}`);
       // À SUPPRIMER
-      getPosts();
+      // getPosts();
       navigation.navigate("HomeScreen");
+      await Updates.reloadAsync();
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +66,6 @@ const Posts = () => {
     }
     getLikes();
   };
-
 
   function timeSince(date) {
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -152,7 +148,10 @@ const Posts = () => {
               {postUser && (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate("Post", { post, postUser, getPosts })
+                    navigation.navigate("Post", {
+                      post: post,
+                      postUser,
+                    })
                   }
                 >
                   <Text className="mt-3">{post.desc}</Text>
@@ -162,7 +161,7 @@ const Posts = () => {
             {post.img && (
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("Post", { post, postUser, getPosts })
+                  navigation.navigate("Post", { post, postUser })
                 }
               >
                 <Image
@@ -192,9 +191,8 @@ const Posts = () => {
                 getLikes={getLikes}
               />
               <TouchableOpacity
-                // À SUPPRIMER GETPOSTS
                 onPress={() =>
-                  navigation.navigate("Post", { post, postUser, getPosts })
+                  navigation.navigate("Post", { post, postUser })
                 }
               >
                 <View className="flex-row items-center gap-2">

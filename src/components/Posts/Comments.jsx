@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Image, Text, View } from "react-native";
+import { postsStore } from "../../../store";
+import * as Updates from 'expo-updates';
 
 const Comments = ({ post, user }) => {
   const [comments, setComments] = useState([]);
@@ -18,7 +20,6 @@ const Comments = ({ post, user }) => {
     try {
       const res = await axios.get("http://localhost:8800/api/comments");
       setComments(res.data);
-      // console.log(res.data);
     } catch (error) {
       console.log(error);
     }

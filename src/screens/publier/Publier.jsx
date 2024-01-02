@@ -12,20 +12,13 @@ import {
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { AuthContext } from "../../navigation/AuthContext";
 import axios from "axios";
+import * as Updates from 'expo-updates';
+
 
 const Publier = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const [img, setImg] = useState(null);
   const [newPost, setNewPost] = useState("");
-
-  const getPosts = async () => {
-    try {
-      const response = await axios.get("http://localhost:8800/api/posts");
-      // Faites quelque chose avec les posts ici, par exemple les mettre dans un état
-    } catch (err) {
-      console.log(err, "erreur lors de la récupération des posts");
-    }
-  };
 
   const handleClick = async () => {
     if (!newPost) return alert("Veuillez saisir un texte");
@@ -36,10 +29,11 @@ const Publier = ({ navigation }) => {
         img: img,
       });
       setNewPost("");
-      await getPosts();
       setImg(null);
       alert("Post created successfully");
-      navigation.goBack("HomeScreen");
+      navigation.goBack();
+      // Ajoutez cette ligne pour forcer un rechargement de l'application
+      await Updates.reloadAsync();
     } catch (err) {
       console.log(err, "erreur");
     }

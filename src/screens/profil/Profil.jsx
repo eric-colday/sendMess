@@ -150,10 +150,10 @@ const Profil = ({ navigation, route }) => {
       </View>
         {/* POSTS */}
         <View>
-          {posts.map((post) => {
+          {posts.map((post, index) => {
             const postUser = user;
             return (
-              <View key={post.id} className="bg-white rounded-lg shadow-lg ">
+              <View key={index} className="bg-white rounded-lg shadow-lg ">
                 <View className="p-1 bg-gray-300"></View>
                 <View className="mb-4 p-4">
                   <View className="flex-row justify-between">

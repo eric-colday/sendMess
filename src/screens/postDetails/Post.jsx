@@ -13,13 +13,16 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Likes from "../../components/home/Likes";
 import { AuthContext } from "../../navigation/AuthContext";
 import Comments from "../../components/Posts/Comments";
+import { postsStore } from "../../../store";
+import * as Updates from 'expo-updates';
 
 const Post = ({ navigation, route }) => {
-  const { post, postUser, getPosts } = route.params;
+  const { post, postUser } = route.params;
   const [updatePost, setUpdatePost] = useState(false);
   const [img, setImg] = useState(null);
   const [updateDesc, setUpdateDesc] = useState("");
   const { user } = useContext(AuthContext);
+  const { getPosts} = postsStore(state => state);
 
   const [imgComment, setImgComment] = useState(null);
   const [newComment, setNewComment] = useState("");
@@ -27,16 +30,17 @@ const Post = ({ navigation, route }) => {
   const postId = post.id;
 
   const HandleUpdate = async () => {
+    
     try {
       await axios.put(`http://localhost:8800/api/posts/${postId}`, {
-        desc: updateDesc,
-        img: img,
+        desc: updateDesc || post.desc,
+        img: img || post.img,
       });
       setUpdateDesc("");
       setImg(null);
       alert("Post updated successfully");
       getPosts();
-      navigation.goBack("HomeScreen");
+      navigation.goBack();
     } catch (error) {
       console.log(error);
     }
@@ -54,6 +58,7 @@ const Post = ({ navigation, route }) => {
       setNewComment("");
       setImgComment(null);
       alert("Comment created successfully");
+      await Updates.reloadAsync();
     } catch (err) {
       console.log(err);
     }
@@ -130,6 +135,7 @@ const Post = ({ navigation, route }) => {
             <View>
               <TextInput
                 autoCapitalize="none"
+                defaultValue={post.img}
                 placeholder="Ajouter uniquement le lien d'une image"
                 onChangeText={(text) => setImg(text)}
                 className="w-[350px] h-[50px] text-[16px] p-4 bg-white rounded-xl "
@@ -138,6 +144,7 @@ const Post = ({ navigation, route }) => {
             <View className="mt-4">
               <TextInput
                 placeholder={post.desc}
+                defaultValue={post.desc}
                 multiline={true}
                 numberOfLines={4}
                 className="text-xl"
