@@ -43,8 +43,6 @@ const Posts = () => {
   const HandleDelete = async (post) => {
     try {
       await axios.delete(`http://localhost:8800/api/posts/${post.id}`);
-      // À SUPPRIMER
-      // getPosts();
       navigation.navigate("HomeScreen");
       await Updates.reloadAsync();
     } catch (error) {

@@ -102,7 +102,7 @@ const Profil = ({ navigation, route }) => {
 
   return (
     <SafeAreaView>
-    {/* Header */}
+      {/* Header */}
       <View className="flex-row justify-between items-center px-8 py-4 border-b border-gray-200">
         <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
           <FontAwesome5 name="chevron-left" size={20} />
@@ -115,39 +115,41 @@ const Profil = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
       <ScrollView>
-      {/* Infos Profil */}
-      <View>
-        <Image
-          source={{
-            uri: user.coverPic || "https://picsum.photos/200/300",
-          }}
-          className="w-full h-60"
-        />
-        <View className="rounded-full w-56 h-56 border-4 border-white -mt-40 ml-24">
+        {/* Infos Profil */}
+        <View>
           <Image
             source={{
-              uri: user.profilePic || "https://picsum.photos/200/300",
+              uri: user.coverPic || "https://picsum.photos/200/300",
             }}
-            className="w-full h-full rounded-full"
+            className="w-full h-60"
           />
-        </View>
-        <View className="flex gap-1 px-8 py-4 border-b border-gray-200">
-          <Text className="font-bold text-3xl capitalize mb-3">
-            {user.name ? user.name : user.username}
-          </Text>
-          <View className="mb-4">
-            <Text className="font-bold">
-              {following ? following.length : 0} abonné(e)s
-            </Text>
-            <Text className="font-bold">
-              {followers ? followers.length : 0} abonnements
-            </Text>
+          <View className="rounded-full w-56 h-56 border-4 border-white -mt-40 ml-24">
+            <Image
+              source={{
+                uri:
+                  user.profilePic ||
+                  "https://res.cloudinary.com/dzer4ijr1/image/upload/v1703108635/users/noavatar_xckjxl.png",
+              }}
+              className="w-full h-full rounded-full"
+            />
           </View>
-          <Text className="text-gray-800">Email : {user.email}</Text>
-          <Text className="text-gray-800">Ville : {user.city}</Text>
-          <Text className="text-gray-800">Bio : {user.bio}</Text>
+          <View className="flex gap-1 px-8 py-4 border-b border-gray-200">
+            <Text className="font-bold text-3xl capitalize mb-3">
+              {user.name ? user.name : user.username}
+            </Text>
+            <View className="mb-4">
+              <Text className="font-bold">
+                {following ? following.length : 0} abonnements
+              </Text>
+              <Text className="font-bold">
+                {followers ? followers.length : 0} abonné(e)s
+              </Text>
+            </View>
+            <Text className="text-gray-800">Email : {user.email}</Text>
+            <Text className="text-gray-800">Ville : {user.city}</Text>
+            <Text className="text-gray-800">Bio : {user.bio}</Text>
+          </View>
         </View>
-      </View>
         {/* POSTS */}
         <View>
           {posts.map((post, index) => {

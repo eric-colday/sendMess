@@ -1,10 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
-import { postsStore } from "../../../store";
-import * as Updates from 'expo-updates';
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import * as Updates from "expo-updates";
 
-const Comments = ({ post, user }) => {
+const Comments = ({ navigation, post, user }) => {
   const [comments, setComments] = useState([]);
   const [users, setUsers] = useState([]);
 
@@ -35,6 +34,15 @@ const Comments = ({ post, user }) => {
       const res = await axios.get("http://localhost:8800/api/users");
       setUsers(res.data);
       // console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const HandleDelete = async (comment) => {
+    try {
+      await axios.delete(`http://localhost:8800/api/comments/${comment.id}`);
+      await Updates.reloadAsync();
     } catch (error) {
       console.log(error);
     }
@@ -92,9 +100,12 @@ const Comments = ({ post, user }) => {
                   </Text>
                   <Text className="mt-1">{comment.desc}</Text>
                 </View>
-                <Text className="mt-2 ml-3">
-                  {timeSince(new Date(comment.createdAt))}.
-                </Text>
+                <View className="flex-row justify-between items-center my-2 ml-3">
+                  <Text>{timeSince(new Date(comment.createdAt))}.</Text>
+                  <TouchableOpacity onPress={() => HandleDelete(comment)}>
+                    <Text className="text-red-600 ">supprimer</Text>
+                  </TouchableOpacity>
+                </View>
                 <View className="flex items-end">
                   {comment.img && (
                     <Image

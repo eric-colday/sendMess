@@ -32,3 +32,15 @@ export const usersStore = create((set) => ({
     }
   },
 }));
+
+export const followingsStore = create((set) => ({
+  followings: [],
+  getFollowings: async () => {
+    try {
+      const res = await axios.get("http://localhost:8800/api/relationships");
+      set({ followings: res.data });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+}));
