@@ -3,21 +3,30 @@ import { Image, ScrollView, Text, View, TouchableOpacity } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import { usersStore } from "../../../store";
 
 const Stories = () => {
   const [story, setStory] = useState([]);
+  const { users, getUsers } = usersStore((state) => state);
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchAllStory = async () => {
       try {
         const res = await axios.get("http://localhost:8800/api/stories");
-        setStory(res.data);
+        const sortedPosts = res.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setStory(sortedPosts);
       } catch (err) {
         console.log(err);
       }
     };
     fetchAllStory();
+  }, []);
+
+  useEffect(() => {
+    getUsers();
   }, []);
 
   return (
@@ -43,22 +52,25 @@ const Stories = () => {
           Créer une stroy
         </Text>
       </TouchableOpacity>
-      {story.map((item) => (
-        <TouchableOpacity
-          key={item.id}
-          className="w-[120px] h-[200px] mr-2 border border-gray-300 rounded-lg bg-slate-200"
-        >
-          <Image
-            source={{
-              uri: item.img,
-            }}
-            className="w-full h-[200px] rounded-lg"
-          />
-          <Text className="text-[12px] font-bold text-white absolute bottom-2 left-2 ">
-            Fabrice Boys
-          </Text>
-        </TouchableOpacity>
-      ))}
+      {story.map((item) => {
+        const user = users.find((user) => user.id === item.userId);
+        return (
+          <TouchableOpacity
+            key={item.id}
+            className="w-[120px] h-[200px] mr-2 border border-gray-300 rounded-lg bg-slate-200"
+          >
+            <Image
+              source={{
+                uri: item.img,
+              }}
+              className="w-full h-[200px] rounded-lg"
+            />
+            <Text className="text-[12px] font-bold text-white absolute bottom-2 left-2 ">
+             {user.name ? user.name : user.username}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </ScrollView>
   );
 };

@@ -37,10 +37,14 @@ const Invitations = ({ navigation }) => {
       });
       console.log(res.data);
       await AsyncStorage.setItem("subscriptions", JSON.stringify(res.data));
-      setSubscriptions({
-        ...subscriptions,
-        [followedUserId]: res.data === "following",
-      });
+      // setSubscriptions({
+      //   ...subscriptions,
+      //   [followedUserId]: res.data === "following",
+      // });
+      setSubscriptions((prevSubscriptions) => [
+        ...prevSubscriptions,
+        { id: followedUserId, status: res.data === "following" },
+      ]);
     } catch (error) {
       console.log(error);
     }
@@ -50,18 +54,22 @@ const Invitations = ({ navigation }) => {
     try {
       const userId = user.id;
       const res = await AsyncStorage.getItem("subscriptions");
-      const allSubscriptions = JSON.parse(res);
+      const subscriptions = JSON.parse(res);
 
-      const userSubscriptions = allSubscriptions.filter(
-        (sub) => sub.userId === userId
-      );
-      setSubscriptions(userSubscriptions);
-      
+      if (Array.isArray(subscriptions)) {
+        const userSubscriptions = subscriptions.filter(
+          (sub) => sub.userId === userId
+        );
+        setSubscriptions(userSubscriptions);
+      } else {
+        console.log("No subscriptions found");
+        setSubscriptions([]);
+      }
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   useEffect(() => {
     getSubscriptions();
   }, []);
@@ -73,17 +81,11 @@ const Invitations = ({ navigation }) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     relationships();
-  }
-  , []);
-
-  
- 
-
-
+  }, []);
 
   return (
     <SafeAreaView className="flex-1">
@@ -113,9 +115,12 @@ const Invitations = ({ navigation }) => {
                           "https://res.cloudinary.com/dzer4ijr1/image/upload/v1703108635/users/noavatar_xckjxl.png",
                       }}
                     />
-                    <Text className="font-semibold capitalize">{following.name ? following.name : following.username}</Text>
+                    <Text className="font-semibold capitalize">
+                      {following.name ? following.name : following.username}
+                    </Text>
                     <TouchableOpacity onPress={() => handleClick(following.id)}>
-                      {subscriptions[following.id] ? (
+                    {/* A CORRIGER */}
+                      {subscriptions.filter((sub) => sub.userId === following.id) ? (
                         <View className="w-40 h-8 border-2 border-blue-700  rounded-full justify-center items-center ">
                           <Text className="font-semibold text-blue-700">
                             Abonné(e)
